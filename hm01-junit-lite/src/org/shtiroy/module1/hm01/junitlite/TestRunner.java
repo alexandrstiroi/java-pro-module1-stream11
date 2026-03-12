@@ -54,7 +54,7 @@ public class TestRunner {
             }
             if (method.isAnnotationPresent(AfterEach.class)) {
                 if (Modifier.isStatic(method.getModifiers())) {
-                    throw new BadTestClassError("@BeforeEach cannot be used on static method: " + method.getName());
+                    throw new BadTestClassError("@AfterEach cannot be used on static method: " + method.getName());
                 }
                 afterEachMethods.add(method);
             }
@@ -98,6 +98,7 @@ public class TestRunner {
         for (TestMethod testMethod : testMethods) {
             if (testMethod.disabled()) {
                 result.computeIfAbsent(TestResult.SKIPPED, key -> new ArrayList<>()).add(new Test(TestResult.SKIPPED, testMethod.displayName(), null));
+                continue;
             }
 
             Throwable testThrowable = null;
