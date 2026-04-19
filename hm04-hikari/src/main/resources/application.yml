@@ -13,4 +13,7 @@ spring:
         format_sql: true
   flyway:
     enabled: true
-    locations: classpath:bd/migration
+    locations: classpath:db/migration
+logging:
+  level:
+    org.flywaydb: debug
