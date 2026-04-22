@@ -6,6 +6,7 @@ import org.shtiroy.module1.hm04.hikari.entity.Product;
 import org.shtiroy.module1.hm04.hikari.exception.BadRequestException;
 import org.shtiroy.module1.hm04.hikari.exception.InsufficientFundsException;
 import org.shtiroy.module1.hm04.hikari.exception.NotFoundException;
+import org.shtiroy.module1.hm04.hikari.mapper.ProductMapper;
 import org.shtiroy.module1.hm04.hikari.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,19 +17,21 @@ import java.util.Optional;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     public List<ProductResponseDto> getProductsByUserId(Long userId) {
         return productRepository.findByUserId(userId).stream()
-                .map(this::from)
+                .map(productMapper::toDto)
                 .toList();
     }
 
     public Optional<ProductResponseDto> getProductById(Long productId) {
-        return productRepository.findById(productId).map(this::from);
+        return productRepository.findById(productId).map(productMapper::toDto);
     }
 
     @Transactional
@@ -45,16 +48,6 @@ public class ProductService {
         }
 
         product.setBalance(product.getBalance().subtract(request.amount()));
-        return from(productRepository.save(product));
-    }
-
-    private ProductResponseDto from(Product product) {
-        return new ProductResponseDto(
-                product.getId(),
-                product.getAccountNumber(),
-                product.getBalance(),
-                product.getProductType(),
-                product.getUserId()
-        );
+        return productMapper.toDto(productRepository.save(product));
     }
 }
