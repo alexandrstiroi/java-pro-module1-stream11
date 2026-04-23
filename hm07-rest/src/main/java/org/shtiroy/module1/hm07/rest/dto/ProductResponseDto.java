@@ -1,9 +1,6 @@
-package org.shtiroy.module1.hm04.hikari.dto;
-
-import org.shtiroy.module1.hm04.hikari.entity.ProductType;
+package org.shtiroy.module1.hm07.rest.dto;
 
 import java.math.BigDecimal;
 
 public record ProductResponseDto(Long id, String accountNumber, BigDecimal balance, ProductType productType, Long userId) {
-
 }

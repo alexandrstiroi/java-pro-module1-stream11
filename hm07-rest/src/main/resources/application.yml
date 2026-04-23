@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: payments-service
+
+server:
+  port: 8181
+
+integrations:
+  executors:
+    product-service:
+      url: "http://localhost:8080/products"
+      connect-timeout: 1s
+      read-timeout: 30s
